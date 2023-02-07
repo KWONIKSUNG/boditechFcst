@@ -76,10 +76,10 @@ const handleGetData = async (setter, userId, searchId) => {
       const newResData = mapper(resData);
       setter(newResData);
       defaultCellChecker(newResData, setter);
-      return;
     } catch (err) {
       console.error(err);
     }
+    return;
   }
 }
 
