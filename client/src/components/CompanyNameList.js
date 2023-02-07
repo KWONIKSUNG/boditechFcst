@@ -4,7 +4,7 @@ const CompanyNameList = function ({ agencyName, setDataArr, coName, userData, se
   const handleClick = (value) => {
     handleClose();
     setCoName(value)
-    handleGetData(setDataArr, agencyName, value);
+    handleGetData(setDataArr, value);
   }
 
   return (

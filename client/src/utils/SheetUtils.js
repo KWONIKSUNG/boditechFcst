@@ -49,7 +49,7 @@ const mapper = (resArr) => {
 }
 
 
-const handleGetData = async (setter, userId, searchId) => {
+const handleGetData = async (setter, userId) => {
   setter([]);
   if (userId === 'admin') {
     try {
@@ -62,8 +62,8 @@ const handleGetData = async (setter, userId, searchId) => {
       console.error(err);
     }
     return;
-  } else if (userId === 'admin' && searchId) {
-    const result = await axios.get(`/api/excel?agency=${searchId}`);
+  } else if (userId === 'admin' && userId) {
+    const result = await axios.get(`/api/excel?agency=${userId}`);
     const resData = result.data[0].data;
     const newResData = mapper(resData);
     setter(newResData);
