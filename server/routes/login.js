@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     connection.query(`
         select userId, userPw from ${LOGIN_SHEET} where userId = ?;
     `, [userId], (error, rows, fields) => {
-        if (rows[0] === null || rows[0].length === 0) res.json('등록되지 않은 유저 입니다.');
+        if (rows[0].userId === null || rows[0].userId === undefined) res.json('등록되지 않은 유저 입니다.');
         if (rows[0].userId && userPw === rows[0].userPw) {
             req.session.user = {
                 id: userId,
