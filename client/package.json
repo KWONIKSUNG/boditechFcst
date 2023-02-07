@@ -17,6 +17,7 @@
     "http-proxy": "^1.18.1",
     "middleware": "^1.0.0",
     "react": "^18.2.0",
+    "react-datasheet": "^1.4.12",
     "react-dom": "^18.2.0",
     "react-excel-renderer": "^1.1.0",
     "react-responsive": "^9.0.2",
@@ -54,6 +55,5 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "https://boditech-excel-upload.netlify.app/",
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:80"
 }

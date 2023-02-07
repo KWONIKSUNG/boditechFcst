@@ -13,7 +13,7 @@ const getUserRouter = require('./routes/getUser');
 
 
 const app = express();
-app.set('port', process.env.PORT || 8080);
+app.set('port', 80);
 
 app.use(express.json({ limit: '100mb' }));
 app.use(serveStatic(path.join(__dirname, '../client/build')));
@@ -32,6 +32,6 @@ app.use('/api/userId', userIdRouter);
 app.use('/api/allExcel', allExcelRouter);
 app.use('/api/getUser', getUserRouter)
 
-app.listen(8080, function () {
-    console.info('listening on 8080')
+app.listen(80, function () {
+    console.info('listening on 80')
 })

@@ -1,4 +1,4 @@
-const SHEET_NAME = 'boditechfcst';
+const SHEET_NAME = 'boditechFcst';
 const GET_SHEET_NAME = 'StandardFcst';
 const LOGIN_SHEET = 'userinfo'
 

@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   connection.query(`
         select
-          UpdateDate, userName, agency, catalog, cat_no, unit, Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, December
+          UpdateDate, userName, agency, catalog, cat_no, unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
         from
           ${SHEET_NAME}
         where 
