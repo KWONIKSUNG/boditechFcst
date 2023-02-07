@@ -15,7 +15,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Button } from "@mui/material";
 import CompanyModal from "../components/CompanyModal";
 import { list } from "../components/List";
-import { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick } from "../utils/SheetUtils";
+import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick } from "../utils/SheetUtils";
 
 
 const Sheet = () => {
@@ -27,13 +27,14 @@ const Sheet = () => {
   const [agencyName, setAgencyName] = useState('');
 
   useEffect(() => {
+    console.log(location.state);
     axios.get(`/api/userId?userId=${location.state}`)
       .then(async (res) => {
         setAgencyName(res.data.data);
         if (res.data.data === 'admin') {
           setIsAdmin(true);
         }
-        handleGetData(setDataArr, agencyName);
+        handleGetData(setDataArr, res.data.data);
       }).catch(err => {
         console.error(err);
       })
@@ -167,7 +168,7 @@ const Sheet = () => {
           {isAdmin && (
             <>
               <FileTitle>Filter</FileTitle>
-              <CompanyModal handleGetData={handleGetData} />
+              <CompanyModal handleGetData={handleGetData} setDataArr={setDataArr} agencyName={agencyName} />
             </>
           )}
         </TitleLayout>

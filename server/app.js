@@ -16,7 +16,7 @@ const app = express();
 app.set('port', process.env.PORT || 8080);
 
 app.use(express.json({ limit: '100mb' }));
-app.use(serveStatic(path.join(__dirname, 'public')));
+app.use(serveStatic(path.join(__dirname, '../client/build')));
 app.use(cookieParser());
 app.use(expressSession({
     secret: 'key',

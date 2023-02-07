@@ -2,7 +2,7 @@ import axios from "axios";
 import { SheetForm } from "../components/Rows";
 
 const handleSubmit = (sheetArr, userId) => {
-  const submitArr = sheetArr.map(innerArr => {
+  const submitArr = sheetArr.map((innerArr) => {
     return innerArr.map((props) => {
       if (props.value === null) {
         return 0;
@@ -11,7 +11,7 @@ const handleSubmit = (sheetArr, userId) => {
       }
     });
   });
-  const newSubArr = submitArr.filter(props => {
+  const newSubArr = submitArr.filter((props) => {
     return (props.reduce((cnt, elem) =>
       cnt + (elem === undefined || elem === null || elem === 0), 0) < 14);
   })
@@ -49,35 +49,34 @@ const mapper = (resArr) => {
 }
 
 
-const handleGetData = async (setter, userId) => {
+const handleGetData = async (setter, userId, searchId) => {
   setter([]);
-  if (userId === 'admin' && userId === null) {
-    try{
-      const result = await axios.get(`/api/allExcel?agency=${userId}`)
-      const resData = result.data[0].data.recordset;
+  if (userId === 'admin') {
+    try {
+      const result = await axios.get(`/api/allExcel`)
+      const resData = result.data[0].data;
       const newResData = mapper(resData);
       setter(newResData);
       defaultCellChecker(newResData, setter);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
     return;
-  } else if ((userId === 'admin' && userId) || userId !== 'admin') {
-    axios.get(`/api/excel?agency=${userId}`)
-      .then(res => {
-        const resData = res.data[0].data.recordset;
-        const newResData = mapper(resData);
-        setter(newResData);
-        defaultCellChecker(newResData, setter);
-      })
-      .catch(err => console.error(err))
+  } else if (userId === 'admin' && searchId) {
+    const result = await axios.get(`/api/excel?agency=${searchId}`);
+    const resData = result.data[0].data;
+    const newResData = mapper(resData);
+    setter(newResData);
+    defaultCellChecker(newResData, setter);
+    return;
   } else {
     try {
       const result = await axios.get(`/api/excel?agency=${userId}`)
-      const resData = result.data[0].data.recordset;
+      const resData = result.data[0].data;
       const newResData = mapper(resData);
       setter(newResData);
       defaultCellChecker(newResData, setter);
+      return;
     } catch (err) {
       console.error(err);
     }
@@ -89,5 +88,5 @@ const handleOnClick = (ref, setter) => {
   ref.current.value = '';
   ref.current.click();
 }
- 
-export {handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick};
+
+export { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick };

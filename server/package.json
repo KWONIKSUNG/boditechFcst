@@ -19,6 +19,7 @@
     "express-session": "^1.17.3",
     "http": "^0.0.1-security",
     "mssql": "^9.0.1",
+    "mysql": "^2.18.1",
     "nodemon": "^2.0.20",
     "path": "^0.12.7",
     "serve-static": "^1.15.0"

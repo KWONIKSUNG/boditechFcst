@@ -1,16 +1,13 @@
-const sql = require('mssql');
-const { config } = require('./config');
-
-const connPool = new sql.ConnectionPool(config.dbconfig)
-    .connect()
-    .then((pool) => {
-        return pool;
-    })
-    .catch((err) => {
-        console.error('err ', err);
-    })
+const mysql = require('mysql');
+// const { config } = require('./config');
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password',
+    database: 'boditech'
+})
 
 module.exports = {
-    sql,
-    connPool
+    mysql,
+    connection
 }

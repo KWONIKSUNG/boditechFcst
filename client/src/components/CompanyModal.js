@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Button, Input } from '@mui/material';
 import ResultTab from './ResultTab';
 import axios from 'axios';
-import {useState} from 'react';
+import { useState } from 'react';
 
 
 const style = {
@@ -21,7 +21,7 @@ const style = {
   p: 4,
 };
 
-export default function CompanyModal({ handleGetData }) {
+export default function CompanyModal({ setDataArr, handleGetData, agencyName }) {
   const [open, setOpen] = useState(false);
   const [coName, setCoName] = useState('');
   const handleOpen = () => setOpen(true);
@@ -30,14 +30,14 @@ export default function CompanyModal({ handleGetData }) {
   const [filteredData, setFilteredData] = useState([]);
 
   const SearchBtnClick = () => {
-    try{
+    try {
       axios.get(`/api/getUser`).then(res => {
-        setUserData(res.data[0].data.recordset);
-        setFilteredData(res.data[0].data.recordset);
-      }).catch(err =>{
+        setUserData(res.data[0].data);
+        setFilteredData(res.data[0].data);
+      }).catch(err => {
         console.error(err);
       })
-    }catch(err) {
+    } catch (err) {
       console.error(err);
     }
   }
@@ -57,7 +57,7 @@ export default function CompanyModal({ handleGetData }) {
         readOnly={true}
         variant="outlined"
         onClick={handleOpen}
-        />
+      />
       <Modal
         open={open}
         onClose={handleClose}
@@ -69,8 +69,8 @@ export default function CompanyModal({ handleGetData }) {
             <ModalTitle>Company Search</ModalTitle>
             <Button variant='contained' onClick={SearchBtnClick}>Search</Button>
           </ModalTitleWrapper>
-          <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => handleChangeFilter(e.target.value)}/>
-          <ResultTab userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose}/>
+          <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => handleChangeFilter(e.target.value)} />
+          <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>

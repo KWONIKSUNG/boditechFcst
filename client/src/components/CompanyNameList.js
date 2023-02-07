@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-const CompanyNameList = function({coName, userData, setCoName, handleClose, handleGetData}) {
+const CompanyNameList = function ({ agencyName, setDataArr, coName, userData, setCoName, handleClose, handleGetData }) {
   const handleClick = (value) => {
     handleClose();
     setCoName(value)
-    handleGetData(value);
+    handleGetData(setDataArr, agencyName, value);
   }
-  
+
   return (
     <ListWrapper>
-      {userData.map((props,idx) => (
+      {userData.map((props, idx) => (
         <ListBox key={`user name list - ${idx}`} onClick={() => handleClick(props.agency)}>
           <IdTitle>{idx + 1}</IdTitle>
           <ContentTitle>{props.agency}</ContentTitle>
