@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   console.log(req.query.agency);
   connection.query(`
         select
-          Year, Name, Company, Catalog, Cat no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
+          Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
         from
           ${SHEET_NAME}
         where 
