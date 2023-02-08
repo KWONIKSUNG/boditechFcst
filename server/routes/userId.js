@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const query = `
-    select agency from ${LOGIN_SHEET} where userId = '${req.query.userId}'
+    select agency from ${LOGIN_SHEET} where USERID = '${req.query.userId}'
   `
   connection.query(query, (err, result, fields) => {
     if (err) throw err;

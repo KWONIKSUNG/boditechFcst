@@ -19,13 +19,13 @@ router.post('/', async (req, res) => {
 
     }
     connection.query(`
-        select userId, userPw from ${LOGIN_SHEET} where userId = '${userId}';
+        select USERID, USERPW from ${LOGIN_SHEET} where USERID = '${userId}';
     `, (error, rows, fields) => {
         if (error || rows.length === 0) {
             return res.json('invaild user');
         }
-        let id = rows[0].userId;
-        if (id && userPw === rows[0].userPw) {
+        let id = rows[0].USERID;
+        if (id && userPw === rows[0].USERPW) {
             req.session.user = {
                 id: userId,
                 pw: userPw,

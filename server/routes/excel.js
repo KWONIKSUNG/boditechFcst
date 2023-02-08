@@ -5,16 +5,18 @@ const { SHEET_NAME, GET_SHEET_NAME } = require('../common/var');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  console.log(req.query.agency);
   connection.query(`
         select
-          UpdateDate, userName, agency, catalog, cat_no, unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
+          Year, Name, Company, Catalog, Cat no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
         from
           ${SHEET_NAME}
         where 
-          agency='${req.query.agency}'
+          Company='${req.query.agency}'
         order by 
-          UpdateDate desc
+          Year desc
   `, (error, rows, filelds) => {
+    console.info(rows);
     res.json([{ data: rows }]);
   })
 })
