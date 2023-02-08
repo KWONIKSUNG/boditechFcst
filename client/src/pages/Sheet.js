@@ -144,7 +144,7 @@ const Sheet = () => {
       )}
       <BtnContainer>
         {(!isAdmin &&
-          <BtnWrapper variant="contained" onClick={handleOnClick}>
+          <BtnWrapper variant="contained" onClick={() => handleOnClick(setDataArr, ref)}>
             <input type='file' ref={ref} style={{ display: "none" }} onChange={fileHandler} />
             Choose File
           </BtnWrapper>
@@ -198,7 +198,7 @@ const TableWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  max-height: 80vh;
+  max-height: 100vh;
   overflow:scroll;
   
   *{
@@ -208,7 +208,7 @@ const TableWrapper = styled.div`
 
 const SpreadsheetWrapper = styled(Spreadsheet)`
   margin: 0 !important;
-  max-height:50vh;
+  max-height:58vh;
 `
 
 const FileTitle = styled.h2`

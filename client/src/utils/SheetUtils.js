@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SheetForm } from "../components/Rows";
 
-const handleSubmit = (sheetArr, userId) => {
+const handleSubmit = async (sheetArr, userId) => {
   const submitArr = sheetArr.map((innerArr) => {
     return innerArr.map((props) => {
       if (props.value === null) {
@@ -16,19 +16,22 @@ const handleSubmit = (sheetArr, userId) => {
       cnt + (elem === undefined || elem === null || elem === 0), 0) < 14);
   })
 
-  axios.post(`/api/excel`, {
-    data: {
-      id: userId,
-      form: newSubArr
-    }
-  })
-    .then(res => alert(res.data[0].data))
-    .catch(err => console.error(err));
+  try {
+    const result = await axios.post(`/api/excel`, {
+      data: {
+        id: userId,
+        form: newSubArr
+      }
+    })
+    alert(result.data[0].data);
+  } catch (err) {
+    console.error(err)
+  };
 }
 
 const defaultCellChecker = (arr, setter) => {
-  if (arr.length < 10) {
-    const arrCount = 10 - arr.length;
+  if (arr.length < 19) {
+    const arrCount = 19 - arr.length;
     if (arrCount >= 0) {
       for (let i = 0; i < arrCount; i++) {
         setter(prev => [...prev, SheetForm[0]]);
@@ -83,7 +86,7 @@ const handleGetData = async (setter, userId) => {
   }
 }
 
-const handleOnClick = (ref, setter) => {
+const handleOnClick = (setter, ref) => {
   setter([]);
   ref.current.value = '';
   ref.current.click();
