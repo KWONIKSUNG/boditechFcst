@@ -27,6 +27,9 @@ const Sheet = () => {
   const [agencyName, setAgencyName] = useState('');
 
   useEffect(() => {
+    if (location.state === null || location.state === undefined || !location.state) {
+      return navigate('/');
+    }
     axios.get(`/api/userId?userId=${location.state}`)
       .then(async (res) => {
         setAgencyName(res.data.data);
