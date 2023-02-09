@@ -11,6 +11,7 @@ const userIdRouter = require('./routes/userId');
 const allExcelRouter = require('./routes/allExcel');
 const getUserRouter = require('./routes/getUser');
 const currentDataRouter = require('./routes/currentExcel');
+const adminGet = require('./routes/adminGet');
 
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/userId', userIdRouter);
 app.use('/api/allExcel', allExcelRouter);
 app.use('/api/getUser', getUserRouter)
 app.use('/api/currentdata', currentDataRouter);
+app.use('/api/adminGet', adminGet);
 
 app.listen(80, function () {
     console.info('listening on 80')

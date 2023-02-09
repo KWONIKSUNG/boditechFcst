@@ -103,6 +103,20 @@ const handleGetCurrent = async (setter, userId, offset, setPagingList) => {
   }
   return;
 }
+const handleGetAdmin = async (setter, userId, offset, setPagingList) => {
+  setter([]);
+  try {
+    const result = await axios.get(`/api/adminGet?offset=${offset}`)
+    setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()']);
+    const resData = result.data[0].data;
+    const newResData = mapper(resData);
+    setter(newResData);
+    defaultCellChecker(newResData, setter);
+  } catch (err) {
+    console.error(err);
+  }
+  return;
+}
 
 const handleOnClick = (setter, ref) => {
   setter([]);
@@ -110,4 +124,4 @@ const handleOnClick = (setter, ref) => {
   ref.current.click();
 }
 
-export { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick, handleGetCurrent };
+export { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick, handleGetCurrent, handleGetAdmin };

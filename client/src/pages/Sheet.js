@@ -16,7 +16,7 @@ import { Button, IconButton } from "@mui/material";
 import CompanyModal from "../components/CompanyModal";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
+import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent, handleGetAdmin } from "../utils/SheetUtils";
 import { Stack } from "@mui/system";
 
 
@@ -166,7 +166,7 @@ const Sheet = () => {
             Submit
           </BtnWrapper>
         )}
-        <BtnWrapper onClick={() => handleGetCurrent(setDataArr, agencyName, offset, setPagingList)} variant="contained">
+        <BtnWrapper onClick={isAdmin ? () => handleGetAdmin(setDataArr, agencyName, offset, setPagingList) : () => handleGetCurrent(setDataArr, agencyName, offset, setPagingList)} variant="contained">
           FCST lookup
         </BtnWrapper>
       </BtnContainer>
