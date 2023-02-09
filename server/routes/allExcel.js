@@ -5,10 +5,17 @@ const { SHEET_NAME } = require('../common/var');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
+  let data;
+  const offset = req.query.offset;
   connection.query(`
-    select Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December from ${SHEET_NAME} order by Name, Year desc
+    select SQL_CALC_FOUND_ROWS Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December from ${SHEET_NAME} limit 30 offset ${offset}
  `, (error, rows, fields) => {
-    res.json([{ data: rows }]);
+    data = rows;
+  })
+  connection.query(`
+        SELECT FOUND_ROWS();
+  `, (error, rows, filelds) => {
+    res.json([{ data: data, pageNum: rows }]);
   })
 })
 

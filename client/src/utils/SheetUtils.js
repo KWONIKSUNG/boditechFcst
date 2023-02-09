@@ -52,11 +52,12 @@ const mapper = (resArr) => {
 }
 
 
-const handleGetData = async (setter, userId) => {
+const handleGetData = async (setter, userId, offset, setPagingList) => {
   setter([]);
   if (userId === 'admin') {
     try {
-      const result = await axios.get(`/api/allExcel`)
+      const result = await axios.get(`/api/allExcel?offset=${offset}`);
+      setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()'])
       const resData = result.data[0].data;
       const newResData = mapper(resData);
       setter(newResData);
@@ -66,7 +67,8 @@ const handleGetData = async (setter, userId) => {
     }
     return;
   } else if (userId === 'admin' && userId) {
-    const result = await axios.get(`/api/excel?agency=${userId}`);
+    const result = await axios.get(`/api/excel?agency=${userId}&offset=${offset}`);
+    setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()'])
     const resData = result.data[0].data;
     const newResData = mapper(resData);
     setter(newResData);
@@ -74,12 +76,10 @@ const handleGetData = async (setter, userId) => {
     return;
   } else {
     try {
-      const result = await axios.get(`/api/excel?agency=${userId}`)
+      const result = await axios.get(`/api/excel?agency=${userId}&offset=${offset}`)
+      setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()']);
       const resData = result.data[0].data;
-      console.log('1 : ', resData);
-      console.log('2 : ', result.data);
       const newResData = mapper(resData);
-      console.log(newResData);
       setter(newResData);
       defaultCellChecker(newResData, setter);
     } catch (err) {
@@ -89,10 +89,25 @@ const handleGetData = async (setter, userId) => {
   }
 }
 
+const handleGetCurrent = async (setter, userId, offset, setPagingList) => {
+  setter([]);
+  try {
+    const result = await axios.get(`/api/currentdata?agency=${userId}&offset=${offset}`)
+    setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()']);
+    const resData = result.data[0].data;
+    const newResData = mapper(resData);
+    setter(newResData);
+    defaultCellChecker(newResData, setter);
+  } catch (err) {
+    console.error(err);
+  }
+  return;
+}
+
 const handleOnClick = (setter, ref) => {
   setter([]);
   ref.current.value = '';
   ref.current.click();
 }
 
-export { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick };
+export { handleSubmit, handleGetData, defaultCellChecker, mapper, handleOnClick, handleGetCurrent };

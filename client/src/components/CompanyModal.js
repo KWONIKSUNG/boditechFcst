@@ -2,10 +2,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import styled from 'styled-components';
-import { Button, Input } from '@mui/material';
+import { Button, IconButton, Input, Stack } from '@mui/material';
 import ResultTab from './ResultTab';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 
 const style = {
@@ -27,20 +29,20 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [userData, setUserData] = useState([]);
+  const [pagingList, setPagingList] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
+  const [offset, setOffset] = useState(0);
 
-  const SearchBtnClick = () => {
-    try {
-      axios.get(`/api/getUser`).then(res => {
-        setUserData(res.data[0].data);
-        setFilteredData(res.data[0].data);
-      }).catch(err => {
-        console.error(err);
-      })
-    } catch (err) {
+
+  useEffect(() => {
+    axios.get(`/api/getUser?offset=${offset}`).then(res => {
+      setUserData(res.data[0].data);
+      setPagingList(res.data[0].pageNum[0]['FOUND_ROWS()']);
+      setFilteredData(res.data[0].data);
+    }).catch((err) => {
       console.error(err);
-    }
-  }
+    })
+  }, [offset])
 
   const handleChangeFilter = (value) => {
     setCoName(value);
@@ -67,15 +69,56 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
         <Box sx={style} display="flex" flexDirection="column">
           <ModalTitleWrapper>
             <ModalTitle>Company Search</ModalTitle>
-            <Button variant='contained' onClick={SearchBtnClick}>Search</Button>
+            <PagingWrapper>
+              <Paging>{offset} - {offset + 100 > pagingList ? pagingList : offset + 100} of {pagingList}</Paging>
+              <IconButton onClick={() => setOffset(prev => {
+                if (prev - 100 <= 0) return prev = 0;
+                else return prev - 100;
+              })}>
+                <ArrowBackIosIcon />
+              </IconButton>
+              <Stack direction="row" spacing={1}>
+                <IconBtn onClick={() => setOffset(prev => {
+                  if (prev + 100 > pagingList - 1) return prev = pagingList - 1;
+                  else return prev + 100;
+                })}>
+                  <ArrowForwardIosIcon />
+                </IconBtn>
+              </Stack>
+            </PagingWrapper>
+            {/* <Button variant='contained' onClick={() => SearchBtnClick(offset)}>Search</Button> */}
           </ModalTitleWrapper>
           <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => handleChangeFilter(e.target.value)} />
-          <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} />
+          <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} offset={offset} pagingList={setPagingList} />
         </Box>
       </Modal>
     </div>
   );
 }
+
+const IconBtn = styled(IconButton)`
+  display: flex !important;
+  align-items: center !important;
+  justify-content:center !important;
+`
+
+const Paging = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 7rem;
+`
+
+const PagingWrapper = styled.div`
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 20rem;
+  padding-top: 0.5rem;
+  font-weight: 600;
+  margin-right: 1rem;
+`
+
 
 
 const ModalTitleWrapper = styled.div`

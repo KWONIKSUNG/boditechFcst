@@ -12,10 +12,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import CompanyModal from "../components/CompanyModal";
-import { list } from "../components/List";
-import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick } from "../utils/SheetUtils";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
+import { Stack } from "@mui/system";
 
 
 const Sheet = () => {
@@ -25,6 +27,8 @@ const Sheet = () => {
   const ref = useRef();
   const [isAdmin, setIsAdmin] = useState(false);
   const [agencyName, setAgencyName] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [pagingList, setPagingList] = useState(0);
 
   useEffect(() => {
     if (location.state === null || location.state === undefined || !location.state) {
@@ -36,7 +40,7 @@ const Sheet = () => {
         if (res.data.data === 'admin') {
           setIsAdmin(true);
         }
-        handleGetData(setDataArr, res.data.data);
+        handleGetData(setDataArr, res.data.data, offset, setPagingList);
       }).catch(err => {
         console.error(err);
       })
@@ -44,7 +48,7 @@ const Sheet = () => {
     return () => {
       setIsAdmin(false);
     }
-  }, [])
+  }, [offset])
 
   const excelDownload = () => {
     const submitArr = dataArr.map(innerArr => {
@@ -106,7 +110,7 @@ const Sheet = () => {
   return (
     <AppWrapper>
       {!isAdmin ? (
-        <Box position="absolute" top="0" left="18%" width="30vw" height="30vh">
+        <Box position="absolute" top="0" left="0" width="30vw" height="30vh">
           <List>
             <ListItem>
               <ListItemIcon>
@@ -134,7 +138,7 @@ const Sheet = () => {
             </ListItem>
           </List>
         </Box>) : (
-        <Box position="absolute" top="0" left="17%" width="30vw" height="30vh">
+        <Box position="absolute" top="0" left="0" width="30vw" height="30vh">
           <List>
             <ListItem>
               <ListItemIcon>
@@ -146,6 +150,10 @@ const Sheet = () => {
         </Box>
       )}
       <BtnContainer>
+        {!isAdmin &&
+          <BtnWrapper onClick={excelDownload} variant="contained">
+            Download to Excel
+          </BtnWrapper>}
         {(!isAdmin &&
           <BtnWrapper variant="contained" onClick={() => handleOnClick(setDataArr, ref)}>
             <input type='file' ref={ref} style={{ display: "none" }} onChange={fileHandler} />
@@ -158,21 +166,41 @@ const Sheet = () => {
             Submit
           </BtnWrapper>
         )}
+        <BtnWrapper onClick={() => handleGetCurrent(setDataArr, agencyName, offset, setPagingList)} variant="contained">
+          FCST lookup
+        </BtnWrapper>
       </BtnContainer>
-      <ListWrapper>
-        {list(excelDownload, handleGetData, agencyName, handleLogout, setDataArr)}
-      </ListWrapper>
       <TableWrapper>
         <TitleLayout>
           <TitleWrapper>
-            <FileTitle>{agencyName}</FileTitle>
+            <FileTitle>
+              <h2>{agencyName}</h2>
+              <BtnWrapper variant="outlined" onClick={handleLogout}>Logout</BtnWrapper>
+            </FileTitle>
           </TitleWrapper>
           {isAdmin && (
-            <>
+            <FilterWrapper>
               <FileTitle>Filter</FileTitle>
-              <CompanyModal handleGetData={handleGetData} setDataArr={setDataArr} agencyName={agencyName} />
-            </>
+              <CompanyModal handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
+            </FilterWrapper>
           )}
+          <PagingWrapper>
+            <Paging>{offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
+            <IconButton onClick={() => setOffset(prev => {
+              if (prev - 30 <= 0) return prev = 0;
+              else return prev - 30;
+            })}>
+              <ArrowBackIosIcon />
+            </IconButton>
+            <Stack direction="row" spacing={1}>
+              <IconBtn onClick={() => setOffset(prev => {
+                if (prev + 30 > pagingList - 1) return prev = pagingList - 1;
+                else return prev + 30;
+              })}>
+                <ArrowForwardIosIcon />
+              </IconBtn>
+            </Stack>
+          </PagingWrapper>
         </TitleLayout>
         <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
       </TableWrapper>
@@ -181,6 +209,36 @@ const Sheet = () => {
 }
 
 export default Sheet;
+const FilterWrapper = styled.div`
+  display: flex;
+  align-items:center;
+  width: 50%;
+`
+
+const IconBtn = styled(IconButton)`
+  display: flex !important;
+  align-items: center !important;
+  justify-content:center !important;
+`
+
+const PagingWrapper = styled.div`
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  width: 20rem;
+  padding-top: 0.5rem;
+  font-weight: 600;
+  margin-right: 1rem;
+`
+
+const Paging = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 7rem;
+  height: 20px;
+`
 
 const AppWrapper = styled.div`
   position:relative;
@@ -193,6 +251,7 @@ const AppWrapper = styled.div`
 const BtnWrapper = styled(Button)`
   width: 10rem;
   margin-right: 1rem !important;
+  margin-left: 1rem !important;
 `
 
 const TableWrapper = styled.div`
@@ -214,7 +273,10 @@ const SpreadsheetWrapper = styled(Spreadsheet)`
   max-height:58vh;
 `
 
-const FileTitle = styled.h2`
+const FileTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 1.1rem;
   font-weight: 600;
   margin:1rem 0.5rem 1rem 1rem;
@@ -247,5 +309,5 @@ const TitleLayout = styled.div`
   align-items: center;
   justify-content: center;
   height: 5rem;
-  width: 30rem;
+  width: 100%;
 `

@@ -10,6 +10,7 @@ const logoutRouter = require('./routes/logout');
 const userIdRouter = require('./routes/userId');
 const allExcelRouter = require('./routes/allExcel');
 const getUserRouter = require('./routes/getUser');
+const currentDataRouter = require('./routes/currentExcel');
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/logout', logoutRouter);
 app.use('/api/userId', userIdRouter);
 app.use('/api/allExcel', allExcelRouter);
 app.use('/api/getUser', getUserRouter)
+app.use('/api/currentdata', currentDataRouter);
 
 app.listen(80, function () {
     console.info('listening on 80')
