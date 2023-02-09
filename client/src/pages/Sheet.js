@@ -184,7 +184,7 @@ const Sheet = () => {
               <CompanyModal handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
             </FilterWrapper>
           )}
-          <PagingWrapper>
+          {isAdmin && <PagingWrapper>
             <Paging>{offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
             <IconButton onClick={() => setOffset(prev => {
               if (prev - 30 <= 0) return prev = 0;
@@ -200,7 +200,7 @@ const Sheet = () => {
                 <ArrowForwardIosIcon />
               </IconBtn>
             </Stack>
-          </PagingWrapper>
+          </PagingWrapper>}
         </TitleLayout>
         <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
       </TableWrapper>

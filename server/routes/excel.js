@@ -5,7 +5,6 @@ const { SHEET_NAME, GET_SHEET_NAME } = require('../common/var');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const offset = req.query.offset;
   let data;
 
   connection.query(`
@@ -17,7 +16,6 @@ router.get('/', async (req, res) => {
           Company='${req.query.agency}'
         order by 
           Year desc
-        limit 30 offset ${offset}
   `, (error, rows, filelds) => {
     data = rows;
   })
@@ -33,7 +31,6 @@ router.post('/', async (req, res) => {
   const newArr = req.body.data.form;
   const arrToSql = [];
   for (let i = 0; i < newArr.length; i++) {
-
     let cat_no = newArr[i][4];
     let agency = newArr[i][2];
     let UpdateDate = newArr[i][0];

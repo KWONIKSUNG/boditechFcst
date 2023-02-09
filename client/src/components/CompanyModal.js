@@ -33,22 +33,13 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
   const [filteredData, setFilteredData] = useState([]);
   const [offset, setOffset] = useState(0);
 
-
-  useEffect(() => {
-    axios.get(`/api/getUser?offset=${offset}`).then(res => {
-      setUserData(res.data[0].data);
-      setPagingList(res.data[0].pageNum[0]['FOUND_ROWS()']);
-      setFilteredData(res.data[0].data);
-    }).catch((err) => {
+  const getSearchData = async (agency) => {
+    try {
+      const result = await axios.get(`/api/filterUser?agency=${agency}`)
+      setFilteredData(result.data[0].data);
+    } catch (err) {
       console.error(err);
-    })
-  }, [offset])
-
-  const handleChangeFilter = (value) => {
-    setCoName(value);
-    setFilteredData(userData.filter(data => {
-      return data.agency.toLowerCase().includes(value.toLowerCase());
-    }))
+    }
   }
 
   return (
@@ -69,26 +60,9 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
         <Box sx={style} display="flex" flexDirection="column">
           <ModalTitleWrapper>
             <ModalTitle>Company Search</ModalTitle>
-            <PagingWrapper>
-              <Paging>{offset} - {offset + 100 > pagingList ? pagingList : offset + 100} of {pagingList}</Paging>
-              <IconButton onClick={() => setOffset(prev => {
-                if (prev - 100 <= 0) return prev = 0;
-                else return prev - 100;
-              })}>
-                <ArrowBackIosIcon />
-              </IconButton>
-              <Stack direction="row" spacing={1}>
-                <IconBtn onClick={() => setOffset(prev => {
-                  if (prev + 100 > pagingList - 1) return prev = pagingList - 1;
-                  else return prev + 100;
-                })}>
-                  <ArrowForwardIosIcon />
-                </IconBtn>
-              </Stack>
-            </PagingWrapper>
-            {/* <Button variant='contained' onClick={() => SearchBtnClick(offset)}>Search</Button> */}
+            <Button variant='contained' onClick={() => getSearchData(coName)}>Search</Button>
           </ModalTitleWrapper>
-          <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => handleChangeFilter(e.target.value)} />
+          <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => setCoName(e.target.value)} />
           <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} offset={offset} pagingList={setPagingList} />
         </Box>
       </Modal>

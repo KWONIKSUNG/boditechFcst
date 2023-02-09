@@ -67,7 +67,7 @@ const handleGetData = async (setter, userId, offset, setPagingList) => {
     }
     return;
   } else if (userId === 'admin' && userId) {
-    const result = await axios.get(`/api/excel?agency=${userId}&offset=${offset}`);
+    const result = await axios.get(`/api/excel?agency=${userId}`);
     setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()'])
     const resData = result.data[0].data;
     const newResData = mapper(resData);
@@ -76,7 +76,7 @@ const handleGetData = async (setter, userId, offset, setPagingList) => {
     return;
   } else {
     try {
-      const result = await axios.get(`/api/excel?agency=${userId}&offset=${offset}`)
+      const result = await axios.get(`/api/excel?agency=${userId}`)
       setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()']);
       const resData = result.data[0].data;
       const newResData = mapper(resData);
@@ -89,11 +89,10 @@ const handleGetData = async (setter, userId, offset, setPagingList) => {
   }
 }
 
-const handleGetCurrent = async (setter, userId, offset, setPagingList) => {
+const handleGetCurrent = async (setter, userId) => {
   setter([]);
   try {
-    const result = await axios.get(`/api/currentdata?agency=${userId}&offset=${offset}`)
-    setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()']);
+    const result = await axios.get(`/api/currentdata?agency=${userId}`)
     const resData = result.data[0].data;
     const newResData = mapper(resData);
     setter(newResData);
