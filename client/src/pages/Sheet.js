@@ -29,6 +29,7 @@ const Sheet = () => {
   const [agencyName, setAgencyName] = useState('');
   const [offset, setOffset] = useState(0);
   const [pagingList, setPagingList] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     if (location.state === null || location.state === undefined || !location.state) {
@@ -166,7 +167,7 @@ const Sheet = () => {
             Submit
           </BtnWrapper>
         )}
-        <BtnWrapper onClick={isAdmin ? () => handleGetAdmin(setDataArr, agencyName, offset, setPagingList) : () => handleGetCurrent(setDataArr, agencyName, offset, setPagingList)} variant="contained">
+        <BtnWrapper onClick={isAdmin ? () => handleGetAdmin(setDataArr, agencyName, offset, setPagingList, setIsSearching) : () => handleGetCurrent(setDataArr, agencyName, offset, setPagingList)} variant="contained">
           FCST lookup
         </BtnWrapper>
       </BtnContainer>
@@ -181,10 +182,10 @@ const Sheet = () => {
           {isAdmin && (
             <FilterWrapper>
               <FileTitle>Filter</FileTitle>
-              <CompanyModal handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
+              <CompanyModal setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
             </FilterWrapper>
           )}
-          {isAdmin && <PagingWrapper>
+          {isAdmin && !isSearching && <PagingWrapper>
             <Paging>{offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
             <IconButton onClick={() => setOffset(prev => {
               if (prev - 30 <= 0) return prev = 0;
@@ -212,7 +213,7 @@ export default Sheet;
 const FilterWrapper = styled.div`
   display: flex;
   align-items:center;
-  width: 50%;
+  margin-right: 2rem;
 `
 
 const IconBtn = styled(IconButton)`
@@ -307,7 +308,7 @@ const BtnContainer = styled.div`
 const TitleLayout = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 5rem;
   width: 100%;
 `

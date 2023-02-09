@@ -102,7 +102,7 @@ const handleGetCurrent = async (setter, userId) => {
   }
   return;
 }
-const handleGetAdmin = async (setter, userId, offset, setPagingList) => {
+const handleGetAdmin = async (setter, userId, offset, setPagingList, setIsSearching) => {
   setter([]);
   try {
     const result = await axios.get(`/api/adminGet?offset=${offset}`)
@@ -111,6 +111,7 @@ const handleGetAdmin = async (setter, userId, offset, setPagingList) => {
     const newResData = mapper(resData);
     setter(newResData);
     defaultCellChecker(newResData, setter);
+    setIsSearching(false);
   } catch (err) {
     console.error(err);
   }

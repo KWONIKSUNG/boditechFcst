@@ -23,12 +23,11 @@ const style = {
   p: 4,
 };
 
-export default function CompanyModal({ setDataArr, handleGetData, agencyName }) {
+export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, agencyName }) {
   const [open, setOpen] = useState(false);
   const [coName, setCoName] = useState('');
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [userData, setUserData] = useState([]);
   const [pagingList, setPagingList] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
   const [offset, setOffset] = useState(0);
@@ -60,7 +59,10 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
         <Box sx={style} display="flex" flexDirection="column">
           <ModalTitleWrapper>
             <ModalTitle>Company Search</ModalTitle>
-            <Button variant='contained' onClick={() => getSearchData(coName)}>Search</Button>
+            <Button variant='contained' onClick={() => {
+              getSearchData(coName);
+              setIsSearching(true);
+            }}>Search</Button>
           </ModalTitleWrapper>
           <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => setCoName(e.target.value)} />
           <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} offset={offset} pagingList={setPagingList} />
@@ -69,31 +71,6 @@ export default function CompanyModal({ setDataArr, handleGetData, agencyName }) 
     </div>
   );
 }
-
-const IconBtn = styled(IconButton)`
-  display: flex !important;
-  align-items: center !important;
-  justify-content:center !important;
-`
-
-const Paging = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 7rem;
-`
-
-const PagingWrapper = styled.div`
-  display:flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 20rem;
-  padding-top: 0.5rem;
-  font-weight: 600;
-  margin-right: 1rem;
-`
-
-
 
 const ModalTitleWrapper = styled.div`
   display: flex;
