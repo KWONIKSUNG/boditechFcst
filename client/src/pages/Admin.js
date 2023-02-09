@@ -87,7 +87,7 @@ const Admin = () => {
             <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
           </FilterWrapper>
           {!isSearching && <PagingWrapper>
-            <Paging>{offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
+            <Paging>{offset >= pagingList ? offset - 30 : offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
             <IconButton onClick={() => setOffset(prev => {
               if (prev - 30 <= 0) return prev = 0;
               else return prev - 30;
@@ -96,7 +96,7 @@ const Admin = () => {
             </IconButton>
             <Stack direction="row" spacing={1}>
               <IconBtn onClick={() => setOffset(prev => {
-                if (prev + 30 > pagingList - 1) return prev = pagingList - 1;
+                if (prev + 30 >= pagingList) return prev;
                 else return prev + 30;
               })}>
                 <ArrowForwardIosIcon />
