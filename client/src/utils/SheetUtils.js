@@ -102,7 +102,7 @@ const handleGetCurrent = async (setter, userId) => {
   }
   return;
 }
-const handleGetAdmin = async (setter, userId, offset, setPagingList, setIsSearching) => {
+const handleGetAdmin = async (setter, offset, setPagingList, setIsSearching) => {
   setter([]);
   try {
     const result = await axios.get(`/api/adminGet?offset=${offset}`)

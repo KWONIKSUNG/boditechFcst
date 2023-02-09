@@ -26,6 +26,7 @@ const Admin = () => {
   const [offset, setOffset] = useState(0);
   const [pagingList, setPagingList] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     if (location.state === null || location.state === undefined || !location.state) {
@@ -49,6 +50,10 @@ const Admin = () => {
       .catch(err => console.error(err))
   }
 
+
+  const clearInput = () => {
+    setValue(prev => prev = '');
+  }
   return (
     <AppWrapper>
       <Box position="absolute" top="0" left="0" width="30vw" height="30vh">
@@ -62,7 +67,10 @@ const Admin = () => {
         </List>
       </Box>
       <BtnContainer>
-        <BtnWrapper onClick={() => handleGetAdmin(setDataArr, agencyName, offset, setPagingList, setIsSearching)} variant="contained">
+        <BtnWrapper onClick={() => {
+          clearInput();
+          handleGetAdmin(setDataArr, offset, setPagingList, setIsSearching);
+        }} variant="contained">
           FCST lookup
         </BtnWrapper>
       </BtnContainer>
@@ -76,7 +84,7 @@ const Admin = () => {
           </TitleWrapper>
           <FilterWrapper>
             <FileTitle>Filter</FileTitle>
-            <CompanyModal setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
+            <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
           </FilterWrapper>
           {!isSearching && <PagingWrapper>
             <Paging>{offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>

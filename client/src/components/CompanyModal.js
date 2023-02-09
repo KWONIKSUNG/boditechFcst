@@ -20,9 +20,8 @@ const style = {
   p: 4,
 };
 
-export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, }) {
+export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, value, setValue }) {
   const [open, setOpen] = useState(false);
-  const [coName, setCoName] = useState('');
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [filteredData, setFilteredData] = useState([]);
@@ -40,7 +39,7 @@ export default function CompanyModal({ setIsSearching, setDataArr, handleGetData
     <div>
       <InputFilter
         label="Company Name"
-        value={coName}
+        value={value}
         readOnly={true}
         variant="outlined"
         onClick={handleOpen}
@@ -55,12 +54,12 @@ export default function CompanyModal({ setIsSearching, setDataArr, handleGetData
           <ModalTitleWrapper>
             <ModalTitle>Company Search</ModalTitle>
             <Button variant='contained' onClick={() => {
-              getSearchData(coName);
+              getSearchData(value);
               setIsSearching(true);
             }}>Search</Button>
           </ModalTitleWrapper>
-          <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => setCoName(e.target.value)} />
-          <ResultTab setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} />
+          <Input placeholder='Enter the name of the company you want to find.' value={value} onChange={(e) => setValue(e.target.value)} />
+          <ResultTab setDataArr={setDataArr} userData={filteredData} coName={value} setCoName={setValue} handleGetData={handleGetData} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>
