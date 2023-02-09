@@ -68,15 +68,6 @@ const handleGetAdminData = async (setter, userId, offset, setPagingList) => {
 
 const handleGetData = async (setter, userId) => {
   setter([]);
-  // if (userId === 'admin' && userId) {
-  //   const result = await axios.get(`/api/excel?agency=${userId}`);
-  //   setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()'])
-  //   const resData = result.data[0].data;
-  //   const newResData = mapper(resData);
-  //   setter(newResData);
-  //   defaultCellChecker(newResData, setter);
-  //   return;
-  // } else {
   try {
     const result = await axios.get(`/api/excel?agency=${userId}`)
     const resData = result.data[0].data;

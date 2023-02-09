@@ -102,7 +102,7 @@ const Sheet = () => {
             <ListItemIcon>
               <FiberManualRecordIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Click Download the file in the upper left and modify the Excel file." />
+            <ListItemText primary="Click Download the file in the upper right and modify the Excel file." />
           </ListItem>
           <ListItem>
             <ListItemIcon>
@@ -120,7 +120,7 @@ const Sheet = () => {
             <ListItemIcon>
               <FiberManualRecordIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Click the FCST lookup in the upper left to see if it has been applied." />
+            <ListItemText primary="Click the FCST lookup in the upper right to see if it has been applied." />
           </ListItem>
         </List>
       </Box>
