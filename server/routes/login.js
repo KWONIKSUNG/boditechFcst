@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     if (userId === undefined) return res.json('등록되지 않은 유저 입니다.');
     if (userId === 'admin') {
         if (userPw === process.env.ADMIN_INFO) {
-            return res.json('success');
+            return res.json('is admin');
         } else {
             return res.json('invaild id or password')
         }

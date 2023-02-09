@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import CompanyNameList from './CompanyNameList';
 
 
-export default function ResultTab({ agencyName, coName, userData, setCoName, handleGetData, handleClose, setDataArr, offset, pagingList }) {
+export default function ResultTab({ userData, setCoName, handleGetData, handleClose, setDataArr }) {
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -14,7 +14,7 @@ export default function ResultTab({ agencyName, coName, userData, setCoName, han
           <Tab label="Search Result" />
         </Tabs>
       </Box>
-      <CompanyNameList agencyName={agencyName} setDataArr={setDataArr} coName={coName} userData={userData} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} offset={offset} pagingList={pagingList} />
+      <CompanyNameList setDataArr={setDataArr} userData={userData} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} />
     </Box>
   );
 }

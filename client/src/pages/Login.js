@@ -9,26 +9,29 @@ import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
-  const isMobile = useMediaQuery({maxWidth: 767});
+  const isMobile = useMediaQuery({ maxWidth: 767 });
   const [userInfo, setUserInfo] = useState({
-    id:'',
-    password:''
+    id: '',
+    password: ''
   })
 
   const handleInput = e => {
-    const {name,value} = e.target;
-    let newUserInfo = {...userInfo};
+    const { name, value } = e.target;
+    let newUserInfo = { ...userInfo };
     newUserInfo[name] = value;
     setUserInfo(newUserInfo);
   }
 
   const handleSubmit = () => {
-    if(userInfo.id && userInfo.password) {
-      axios.post(`/api/login`, {data: {id:userInfo.id, password: userInfo.password}})
+    if (userInfo.id && userInfo.password) {
+      axios.post(`/api/login`, { data: { id: userInfo.id, password: userInfo.password } })
         .then(res => {
-          if(res.data === 'success'){
-            navigate('/Sheet', {state : userInfo.id});
-          }else{
+          if (res.data === 'success') {
+            navigate('/Sheet', { state: userInfo.id });
+          } else if (res.data === 'is admin') {
+            navigate('/admin', { state: userInfo.id });
+          }
+          else {
             alert('This user is not registered.');
             return;
           }
@@ -40,11 +43,11 @@ const Login = () => {
 
   return (
     <LoginPageWrapper>
-      <LogoImg src="/logo.png" alt="logo" onClick={() => navigate('/')}/>
+      <LogoImg src="/logo.png" alt="logo" onClick={() => navigate('/')} />
       <LoginBox isMobile={isMobile}>
         <InputWrapper>
-          <LoginInput label="ID" variant="outlined" name="id" onChange={handleInput}/>
-          <LoginInput type="password" label="Password" variant="outlined" name="password" onChange={handleInput}/>
+          <LoginInput label="ID" variant="outlined" name="id" onChange={handleInput} />
+          <LoginInput type="password" label="Password" variant="outlined" name="password" onChange={handleInput} />
         </InputWrapper>
         <BtnWrapper>
           <LoginButton variant="contained" color="info" onClick={handleSubmit}>Sign in</LoginButton>

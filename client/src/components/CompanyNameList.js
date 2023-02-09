@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-const CompanyNameList = function ({ agencyName, setDataArr, coName, userData, setCoName, handleClose, handleGetData, offset, pagingList }) {
+const CompanyNameList = function ({ setDataArr, userData, setCoName, handleClose, handleGetData }) {
   const handleClick = (value) => {
     handleClose();
     setCoName(value)
-    handleGetData(setDataArr, value, offset, pagingList);
+    handleGetData(setDataArr, value);
   }
 
   return (

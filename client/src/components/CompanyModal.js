@@ -2,13 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import styled from 'styled-components';
-import { Button, IconButton, Input, Stack } from '@mui/material';
+import { Button, Input } from '@mui/material';
 import ResultTab from './ResultTab';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
+import { useState } from 'react';
 
 const style = {
   position: 'absolute',
@@ -23,14 +20,12 @@ const style = {
   p: 4,
 };
 
-export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, agencyName }) {
+export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, }) {
   const [open, setOpen] = useState(false);
   const [coName, setCoName] = useState('');
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [pagingList, setPagingList] = useState(0);
   const [filteredData, setFilteredData] = useState([]);
-  const [offset, setOffset] = useState(0);
 
   const getSearchData = async (agency) => {
     try {
@@ -65,7 +60,7 @@ export default function CompanyModal({ setIsSearching, setDataArr, handleGetData
             }}>Search</Button>
           </ModalTitleWrapper>
           <Input placeholder='Enter the name of the company you want to find.' value={coName} onChange={(e) => setCoName(e.target.value)} />
-          <ResultTab agencyName={agencyName} setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} offset={offset} pagingList={setPagingList} />
+          <ResultTab setDataArr={setDataArr} userData={filteredData} coName={coName} setCoName={setCoName} handleGetData={handleGetData} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>
