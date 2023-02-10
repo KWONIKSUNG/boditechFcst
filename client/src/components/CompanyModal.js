@@ -54,6 +54,7 @@ export default function CompanyModal({ setIsSearching, setDataArr, handleGetData
           <ModalTitleWrapper>
             <ModalTitle>Company Search</ModalTitle>
             <Button variant='contained' onClick={() => {
+              if (value === '' || value === null || value === undefined) return;
               getSearchData(value);
               setIsSearching(true);
             }}>Search</Button>
