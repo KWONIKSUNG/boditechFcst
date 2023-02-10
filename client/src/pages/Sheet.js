@@ -187,6 +187,9 @@ const TableWrapper = styled.div`
 const SpreadsheetWrapper = styled(Spreadsheet)`
   margin: 0 !important;
   max-height:58vh;
+  * {
+     text-align: center !important;
+  }
 `
 
 const FileTitle = styled.div`

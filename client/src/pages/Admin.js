@@ -162,10 +162,10 @@ const TableWrapper = styled.div`
   align-items:flex-start;
   justify-content: center;
   flex-direction: column;
-  width: 100%;
   max-height: 100vh;
+  width: 100%;
   overflow:scroll;
-  
+
   *{
     color: darkslategray !important;
   }
@@ -174,6 +174,10 @@ const TableWrapper = styled.div`
 const SpreadsheetWrapper = styled(Spreadsheet)`
   margin: 0 !important;
   max-height:58vh;
+
+  * {
+     text-align: center !important;
+  }
 `
 
 const FileTitle = styled.div`
