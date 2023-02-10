@@ -14,8 +14,6 @@ router.get('/', async (req, res) => {
           ${GET_SHEET_NAME}
         where 
           Company='${req.query.agency}'
-        order by 
-          Year desc
   `, (error, rows, filelds) => {
     data = rows;
   })
@@ -30,6 +28,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const newArr = req.body.data.form;
   const arrToSql = [];
+  let isError = false;
   for (let i = 0; i < newArr.length; i++) {
     let cat_no = newArr[i][4];
     let agency = newArr[i][2];
@@ -55,17 +54,25 @@ router.post('/', async (req, res) => {
 
   arrToSql.forEach((props) => {
     const query = `
-    insert into ${SHEET_NAME} values (?) on duplicate key update Year = ${props.convertValue[0]}, Name='${props.convertValue[1]}', Company='${props.convertValue[2]}', Catalog='${props.convertValue[3]}', Cat_no='${props.convertValue[4]}', Unit='${props.convertValue[5]}', January=${props.convertValue[6]},February=${props.convertValue[7]},March=${props.convertValue[8]},Aprill=${props.convertValue[9]},May=${props.convertValue[10]},June=${props.convertValue[11]},July=${props.convertValue[12]},August=${props.convertValue[13]},September=${props.convertValue[14]},October=${props.convertValue[15]},November=${props.convertValue[16]},December=${props.convertValue[17]}, InsertDate='${props.convertValue[18]}'
+    insert into ${SHEET_NAME} values (?) on duplicate key update Year = ${props.convertValue[0]}, Name='${props.convertValue[1]}', Company='${props.convertValue[2]}', Catalog='${props.convertValue[3]}', Cat_no='${props.convertValue[4]}', Unit='${props.convertValue[5]}', January=${props.convertValue[6]},February=${props.convertValue[7]},March=${props.convertValue[8]},Aprill=${props.convertValue[9]},May=${props.convertValue[10]},June=${props.convertValue[11]},July=${props.convertValue[12]},August=${props.convertValue[13]},September=${props.convertValue[14]},October=${props.convertValue[15]},November=${props.convertValue[16]},December=${props.convertValue[17]}, InsertDate='${props.convertValue[18]};'
   `;
     connection.query(query, [props.convertValue], (error, rows, fields) => {
       if (error) {
-        return;
+        isError = true;
+        connection.rollback();
       }
     })
   })
 
-  return res.send([{ data: 'upload success' }]);
-
+  setTimeout(() => {
+    if (isError) {
+      res.send([{ data: 'Error Occurred! Please check the data type ' }]);
+      return;
+    } else {
+      res.send([{ data: 'upload success' }]);
+      return;
+    }
+  }, 500)
 })
 
 module.exports = router;
