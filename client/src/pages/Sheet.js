@@ -14,6 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Button } from "@mui/material";
 import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
+import ChangePw from "../components/ChangePw";
 
 
 const Sheet = () => {
@@ -144,6 +145,7 @@ const Sheet = () => {
           <TitleWrapper>
             <FileTitle>
               <h2>{agencyName}</h2>
+              <ChangePw userId={location.state} />
               <BtnWrapper variant="outlined" onClick={handleLogout}>Logout</BtnWrapper>
             </FileTitle>
           </TitleWrapper>
