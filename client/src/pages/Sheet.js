@@ -47,7 +47,7 @@ const Sheet = () => {
       return temp;
     });
     const downloadTitle = [...TitleLabel];
-    downloadTitle.unshift('No.');
+    downloadTitle.unshift('');
     submitArr.unshift(downloadTitle);
     const book = xlsx.utils.book_new();
     const dataSheet = xlsx.utils.json_to_sheet(submitArr, { skipHeader: true });
@@ -130,7 +130,7 @@ const Sheet = () => {
             </FileTitle>
           </TitleWrapper>
         </TitleLayout>
-        <SpreadsheetWrapper CornerIndicator='title' columnLabels={['No.', ...TitleLabel]} data={dataArr} onChange={setDataArr} />
+        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
       </TableWrapper>
     </AppWrapper>
   );
