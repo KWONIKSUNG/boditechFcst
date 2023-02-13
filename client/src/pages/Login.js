@@ -22,7 +22,8 @@ const Login = () => {
     setUserInfo(newUserInfo);
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (userInfo.id && userInfo.password) {
       axios.post(`/api/login`, { data: { id: userInfo.id, password: userInfo.password } })
         .then(res => {
@@ -44,13 +45,13 @@ const Login = () => {
   return (
     <LoginPageWrapper>
       <LogoImg src="/logo.png" alt="logo" onClick={() => navigate('/')} />
-      <LoginBox isMobile={isMobile}>
+      <LoginBox isMobile={isMobile} onSubmit={handleSubmit}>
         <InputWrapper>
           <LoginInput label="ID" variant="outlined" name="id" onChange={handleInput} />
           <LoginInput type="password" label="Password" variant="outlined" name="password" onChange={handleInput} />
         </InputWrapper>
         <BtnWrapper>
-          <LoginButton variant="contained" color="info" onClick={handleSubmit}>Sign in</LoginButton>
+          <LoginButton type="submit" variant="contained" color="info">Sign in</LoginButton>
         </BtnWrapper>
       </LoginBox>
     </LoginPageWrapper>
@@ -73,7 +74,7 @@ const LogoImg = styled.img`
   cursor: pointer;
 `
 
-const LoginBox = styled.div`
+const LoginBox = styled.form`
   display: flex;
   align-items: center;
   justify-content: center;
