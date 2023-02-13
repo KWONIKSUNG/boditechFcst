@@ -33,16 +33,22 @@ const Sheet = () => {
   }, [])
 
   const excelDownload = () => {
+    let index = 1;
     const submitArr = dataArr.map(innerArr => {
-      return innerArr.map((props) => {
+      const temp = innerArr.map((props) => {
         if (props.value === null || props.value === undefined) {
           return null;
         } else {
           return props.value;
         }
       });
+      temp.unshift(index);
+      index++;
+      return temp;
     });
-    submitArr.unshift(TitleLabel);
+    const downloadTitle = [...TitleLabel];
+    downloadTitle.unshift('Index');
+    submitArr.unshift(downloadTitle);
     const book = xlsx.utils.book_new();
     const dataSheet = xlsx.utils.json_to_sheet(submitArr, { skipHeader: true });
     xlsx.utils.book_append_sheet(book, dataSheet, "data");
@@ -63,6 +69,7 @@ const Sheet = () => {
             }
             return newDataObj;
           });
+          dataObj.shift();
           setDataArr(prev => {
             return [...prev, dataObj];
           })
