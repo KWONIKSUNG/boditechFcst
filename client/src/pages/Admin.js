@@ -35,7 +35,7 @@ const Admin = () => {
     axios.get(`/api/userId?userId=${location.state}`)
       .then(async (res) => {
         setAgencyName(res.data.data);
-        handleGetAdminData(setDataArr, res.data.data, offset, setPagingList);
+        handleGetAdminData(setDataArr, offset, setPagingList);
       }).catch(err => {
         console.error(err);
       })
