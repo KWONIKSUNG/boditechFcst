@@ -26,6 +26,10 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
   const newArr = req.body.data.form;
   const arrToSql = [];
   let isError = false;
@@ -36,7 +40,7 @@ router.post('/', async (req, res) => {
     const param = newArr[i];
     const zeroCount = param.filter(elem => elem === 0 || elem === '0').length;
     if (zeroCount > 13) continue;
-    param.push('date(now())');
+    param.push(`${year}-${month}-${day}`);
     const convertValue = param.map(prop => {
       if (isNaN(Number(prop))) {
         return prop;

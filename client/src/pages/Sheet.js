@@ -6,12 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TitleLabel } from "../components/Rows";
 import * as xlsx from 'xlsx';
 import axios from "axios";
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Button } from "@mui/material";
 import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
 import ChangePw from "../components/ChangePw";
@@ -97,34 +91,13 @@ const Sheet = () => {
 
   return (
     <AppWrapper>
-      <Box position="absolute" top="0" left="0" width="30vw" height="30vh">
-        <List>
-          <ListItem>
-            <ListItemIcon>
-              <FiberManualRecordIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Click Download the file in the upper right and modify the Excel file." />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <FiberManualRecordIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Click Choose File and upload modified file" />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <FiberManualRecordIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Click Submit" />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <FiberManualRecordIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Click the FCST lookup in the upper right to see if it has been applied." />
-          </ListItem>
-        </List>
-      </Box>
+      <ListWrapper>
+        <p>Step</p>
+        <li>Click Download the file in the upper right and modify the Excel file.</li>
+        <li>Click Choose File and upload modified file</li>
+        <li>Click Submit</li>
+        <li>Click the FCST lookup in the upper right to see if it has been applied.</li>
+      </ListWrapper>
       <BtnContainer>
         <BtnWrapper onClick={excelDownload} variant="contained">
           Download to Excel
@@ -226,4 +199,35 @@ const TitleLayout = styled.div`
   justify-content: space-between;
   height: 5rem;
   width: 100%;
+`
+
+const ListWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:50vw;
+  display: flex;
+  align-items: flex-start;
+  justify-content:center;
+  flex-direction: column;
+  padding-left: 1rem;
+  padding-top: 1rem;
+
+  font-weight: 900;
+  font-size: 1.2rem;
+
+  p{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-left : 1.5rem;
+    width: 5rem;
+    height: 2rem;
+    background-color: rgba(194, 217, 255,0.5)
+  };
+
+  li{
+    margin-bottom: 1.2rem;
+  }
 `

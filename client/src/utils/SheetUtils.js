@@ -51,7 +51,7 @@ const mapper = (resArr) => {
   return resultArr;
 }
 
-const handleGetAdminData = async (setter, userId, offset, setPagingList) => {
+const handleGetAdminData = async (setter, offset, setPagingList) => {
   try {
     const result = await axios.get(`/api/allExcel?offset=${offset}`);
     setPagingList(result.data[0].pageNum[0]['FOUND_ROWS()'])
