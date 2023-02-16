@@ -5,23 +5,15 @@ const { SHEET_NAME, GET_SHEET_NAME } = require('../common/var');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  let data;
-
   connection.query(`
         select
           SQL_CALC_FOUND_ROWS Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
         from
           ${GET_SHEET_NAME}
         where 
-          Company='${req.query.agency}'
+          Name='${req.query.name}'
   `, (error, rows, filelds) => {
-    data = rows;
-  })
-
-  connection.query(`
-        SELECT FOUND_ROWS();
-  `, (error, rows, filelds) => {
-    res.json([{ data: data, pageNum: rows }]);
+    res.json(rows)
   })
 })
 

@@ -9,29 +9,24 @@ import axios from "axios";
 import { Button } from "@mui/material";
 import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
 import ChangePw from "../components/ChangePw";
+import { agencySelector, logout } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Sheet = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [dataArr, setDataArr] = useState([]);
   const ref = useRef();
-  const [agencyName, setAgencyName] = useState('');
+  const id = useSelector(state => state.user.id)
+  const agencyName = useSelector(agencySelector)
 
   useEffect(() => {
-    if (location.state === null || location.state === undefined || !location.state) {
-      return navigate('/');
-    }
-    axios.get(`/api/userId?userId=${location.state}`)
-      .then(async (res) => {
-        setAgencyName(res.data.data);
-        handleGetData(setDataArr, res.data.data);
-      }).catch(err => {
-        console.error(err);
-      })
-
+    handleGetData(setDataArr, id);
   }, [])
 
+  console.log(dataArr)
   const excelDownload = () => {
     let index = 1;
     const submitArr = dataArr.map(innerArr => {
@@ -89,11 +84,7 @@ const Sheet = () => {
   }
 
   const handleLogout = () => {
-    axios.get(`/api/logout`)
-      .then(res => {
-        navigate('/');
-      })
-      .catch(err => console.error(err))
+    dispatch(logout()).then(() => navigate('/'))
   }
 
   return (
@@ -130,7 +121,7 @@ const Sheet = () => {
             </FileTitle>
           </TitleWrapper>
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
+        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} />
       </TableWrapper>
     </AppWrapper>
   );

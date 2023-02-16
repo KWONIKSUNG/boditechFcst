@@ -70,7 +70,7 @@ const handleGetData = async (setter, userId) => {
   setter([]);
   try {
     const result = await axios.get(`/api/excel?agency=${userId}`)
-    const resData = result.data[0].data;
+    const resData = result.data;
     const newResData = mapper(resData);
     setter(newResData);
     defaultCellChecker(newResData, setter);

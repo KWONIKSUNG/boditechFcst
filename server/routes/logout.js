@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
         return;
       }
       console.info('로그아웃 완료.');
-      res.json([{ data: '로그아웃 완료' }]);
+      res.json('로그아웃 완료');
     })
   } else {
     res.json('유저 정보가 없습니다.');
