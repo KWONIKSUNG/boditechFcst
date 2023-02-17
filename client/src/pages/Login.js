@@ -1,57 +1,66 @@
 import styled from "styled-components";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import axios from 'axios';
-// import { PROXY } from "../components/proxy";
+import { useDispatch, useSelector } from "react-redux";
+import { statusSelector, login } from "../features/user/userSlice";
+import { CircularProgress } from "@mui/material";
+import { Box } from "@mui/system";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const status = useSelector(statusSelector)
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
   const [userInfo, setUserInfo] = useState({
     id: '',
     password: ''
   })
 
+  useEffect(() => {
+    if (status === 'success') {
+      navigate('/Sheet')
+    }
+  })
+
   const handleInput = e => {
-    const { name, value } = e.target;
-    let newUserInfo = { ...userInfo };
-    newUserInfo[name] = value;
-    setUserInfo(newUserInfo);
+    setUserInfo({
+      ...userInfo,
+      [e.target.name]: e.target.value
+    })
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (userInfo.id && userInfo.password) {
-      axios.post(`/api/login`, { data: { id: userInfo.id, password: userInfo.password } })
-        .then(res => {
-          if (res.data === 'success') {
-            navigate('/Sheet', { state: userInfo.id });
-          } else if (res.data === 'is admin') {
-            navigate('/admin', { state: userInfo.id });
-          }
-          else {
-            alert('This user is not registered.');
-            return;
-          }
-        })
-        .catch(err => console.error(err));
-    }
-    else alert('Please check your ID and password.');
+  const onClickSignIn = () => {
+    dispatch(login({ id: userInfo.id, password: userInfo.password })).then((res) => {
+      if (res.payload === 'success') {
+        navigate('/Sheet')
+      }
+    })
   }
+
+
+  if (status === 'loading') {
+    return (
+      <Box sx={{ display: 'flex', width: "100vw", height: "100vh", justifyContent: "center", alignItems: "center" }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
 
   return (
     <LoginPageWrapper>
       <LogoImg src="/logo.png" alt="logo" onClick={() => navigate('/')} />
-      <LoginBox isMobile={isMobile} onSubmit={handleSubmit}>
+      <LoginBox isMobile={isMobile}>
         <InputWrapper>
           <LoginInput label="ID" variant="outlined" name="id" onChange={handleInput} />
           <LoginInput type="password" label="Password" variant="outlined" name="password" onChange={handleInput} />
         </InputWrapper>
         <BtnWrapper>
-          <LoginButton type="submit" variant="contained" color="info">Sign in</LoginButton>
+          <LoginButton variant="contained" color="info" onClick={onClickSignIn}>Sign in</LoginButton>
         </BtnWrapper>
       </LoginBox>
     </LoginPageWrapper>
