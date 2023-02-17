@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  console.info('logout 진행중')
   if (req.session.user) {
     req.session.destroy(err => {
       if (err) {

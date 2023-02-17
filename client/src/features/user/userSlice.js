@@ -3,14 +3,13 @@ import axios from "axios";
 
 const initialState = {
   id: '',
-  password: '',
   agency: '',
   loginStatus: 'idle'
 }
 
-export const fetchUser = createAsyncThunk('user/fetchUser', async (id) => {
-  const response = await axios.get(`/api/userId?userId=${id}`)
-  return response.data.data
+export const login = createAsyncThunk('user/login', async (userInfo) => {
+  const response = await axios.post(`/api/login?id=${userInfo.id}&password=${userInfo.password}`)
+  return response.data
 })
 
 export const logout = createAsyncThunk('user/logout', async () => {
@@ -21,32 +20,23 @@ export const logout = createAsyncThunk('user/logout', async () => {
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    login(state, action) {
-      const { id, password } = action.payload
-      state.id = id
-      state.password = password
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        console.log('action payload : ', action.payload)
-        const { USERID, USERPW, agency } = action.payload
-        if (state.id === USERID && state.password === USERPW) {
-          state.agency = agency
-          state.loginStatus = 'success'
-        } else {
-          state.loginStatus = 'invaild'
-        }
+      .addCase(login.fulfilled, (state, action) => {
+        const { id, agency } = action.payload
+        state.agency = agency
+        state.id = id
+        state.loginStatus = 'success'
       })
-      .addCase(fetchUser.pending, (state, action) => {
+      .addCase(login.pending, (state, action) => {
         state.loginStatus = 'loading'
+      }).addCase(logout.fulfilled, (state, action) => {
+        state.loginStatus = 'idle'
       })
   }
 })
 
-export const { login } = userSlice.actions
 export const statusSelector = state => state.user.loginStatus
 export const agencySelector = state => state.user.agency
 export default userSlice.reducer

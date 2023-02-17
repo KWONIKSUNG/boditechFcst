@@ -69,7 +69,7 @@ const handleGetAdminData = async (setter, offset, setPagingList) => {
 const handleGetData = async (setter, userId) => {
   setter([]);
   try {
-    const result = await axios.get(`/api/excel?agency=${userId}`)
+    const result = await axios.get(`/api/excel?id=${userId}`)
     const resData = result.data;
     const newResData = mapper(resData);
     setter(newResData);

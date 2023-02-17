@@ -7,11 +7,11 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   connection.query(`
         select
-          SQL_CALC_FOUND_ROWS Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
+          Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
         from
           ${GET_SHEET_NAME}
         where 
-          Name='${req.query.name}'
+          Name='${req.query.id}'
   `, (error, rows, filelds) => {
     res.json(rows)
   })

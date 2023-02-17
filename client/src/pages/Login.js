@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useDispatch, useSelector } from "react-redux";
-import { statusSelector, login, fetchUser } from "../features/user/userSlice";
+import { statusSelector, login } from "../features/user/userSlice";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 
@@ -34,9 +34,8 @@ const Login = () => {
   }
 
   const onClickSignIn = () => {
-    dispatch(login({ id: userInfo.id, password: userInfo.password }))
-    dispatch(fetchUser(userInfo.id)).then(() => {
-      if (status === 'success') {
+    dispatch(login({ id: userInfo.id, password: userInfo.password })).then((res) => {
+      if (res.payload === 'success') {
         navigate('/Sheet')
       }
     })

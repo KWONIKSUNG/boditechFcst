@@ -5,11 +5,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { TitleLabel } from "../components/Rows";
 import * as xlsx from 'xlsx';
-import axios from "axios";
 import { Button } from "@mui/material";
 import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
 import ChangePw from "../components/ChangePw";
-import { agencySelector, logout } from "../features/user/userSlice";
+import { agencySelector, logout, statusSelector } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -21,12 +20,14 @@ const Sheet = () => {
   const ref = useRef();
   const id = useSelector(state => state.user.id)
   const agencyName = useSelector(agencySelector)
+  const status = useSelector(statusSelector)
 
   useEffect(() => {
-    handleGetData(setDataArr, id);
-  }, [])
+    if (status === 'success') {
+      handleGetData(setDataArr, id);
+    }
+  }, [status, id])
 
-  console.log(dataArr)
   const excelDownload = () => {
     let index = 1;
     const submitArr = dataArr.map(innerArr => {
