@@ -16,30 +16,21 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { handleGetCurrent, handleGetAdmin, handleGetAdminData } from "../utils/SheetUtils";
 import { Stack } from "@mui/system";
+import { useSelector } from "react-redux";
+import { agencySelector } from "../features/user/userSlice";
 
 
 const Admin = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [dataArr, setDataArr] = useState([]);
-  const [agencyName, setAgencyName] = useState('');
+  const agencyName = useSelector(agencySelector);
   const [offset, setOffset] = useState(0);
   const [pagingList, setPagingList] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    if (location.state === null || location.state === undefined || !location.state) {
-      return navigate('/');
-    }
-    axios.get(`/api/userId?userId=${location.state}`)
-      .then(async (res) => {
-        setAgencyName(res.data.data);
-        handleGetAdminData(setDataArr, offset, setPagingList);
-      }).catch(err => {
-        console.error(err);
-      })
-
+    handleGetAdminData(setDataArr, offset, setPagingList);
   }, [offset])
 
   const handleLogout = () => {
@@ -84,7 +75,7 @@ const Admin = () => {
           </TitleWrapper>
           <FilterWrapper>
             <FileTitle>Filter</FileTitle>
-            <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} agencyName={agencyName} />
+            <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} />
           </FilterWrapper>
           {!isSearching && <PagingWrapper>
             <Paging>{offset >= pagingList ? offset - 30 : offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>

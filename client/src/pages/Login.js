@@ -37,6 +37,8 @@ const Login = () => {
     dispatch(login({ id: userInfo.id, password: userInfo.password })).then((res) => {
       if (res.payload === 'success') {
         navigate('/Sheet')
+      } else {
+        navigate('/Admin')
       }
     })
   }
