@@ -25,8 +25,10 @@ const Sheet = () => {
   useEffect(() => {
     if (status === 'success') {
       handleGetData(setDataArr, id);
+    } else {
+      navigate('/')
     }
-  }, [status, id])
+  }, [status, id, navigate])
 
   const excelDownload = () => {
     let index = 1;

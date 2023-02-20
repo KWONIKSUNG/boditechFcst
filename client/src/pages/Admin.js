@@ -16,8 +16,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { handleGetCurrent, handleGetAdmin, handleGetAdminData } from "../utils/SheetUtils";
 import { Stack } from "@mui/system";
-import { useSelector } from "react-redux";
-import { agencySelector } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { agencySelector, logout, statusSelector } from "../features/user/userSlice";
 
 
 const Admin = () => {
@@ -28,17 +28,19 @@ const Admin = () => {
   const [pagingList, setPagingList] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const [value, setValue] = useState('');
+  const status = useSelector(statusSelector)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    handleGetAdminData(setDataArr, offset, setPagingList);
-  }, [offset])
+    if (status === 'success') {
+      handleGetAdminData(setDataArr, offset, setPagingList);
+    } else {
+      navigate('/')
+    }
+  }, [offset, navigate, status])
 
   const handleLogout = () => {
-    axios.get(`/api/logout`)
-      .then(res => {
-        navigate('/');
-      })
-      .catch(err => console.error(err))
+    dispatch(logout())
   }
 
 

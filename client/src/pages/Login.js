@@ -20,12 +20,6 @@ const Login = () => {
     password: ''
   })
 
-  useEffect(() => {
-    if (status === 'success') {
-      navigate('/Sheet')
-    }
-  })
-
   const handleInput = e => {
     setUserInfo({
       ...userInfo,
@@ -35,14 +29,13 @@ const Login = () => {
 
   const onClickSignIn = () => {
     dispatch(login({ id: userInfo.id, password: userInfo.password })).then((res) => {
-      if (res.payload === 'success') {
-        navigate('/Sheet')
-      } else {
+      if (res.payload.id === 'admin') {
         navigate('/Admin')
+      } else {
+        navigate('/Sheet')
       }
     })
   }
-
 
   if (status === 'loading') {
     return (

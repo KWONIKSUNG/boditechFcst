@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { redirect } from "react-router-dom";
 
 const initialState = {
   id: '',
@@ -8,7 +9,8 @@ const initialState = {
 }
 
 export const login = createAsyncThunk('user/login', async (userInfo) => {
-  const response = await axios.post(`/api/login?id=${userInfo.id}&password=${userInfo.password}`)
+  const { id, password } = userInfo
+  const response = await axios.post(`/api/login?id=${id}&password=${password}`)
   return response.data
 })
 
@@ -24,6 +26,7 @@ const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(login.fulfilled, (state, action) => {
+        console.log(action.payload)
         const { id, agency } = action.payload
         state.agency = agency
         state.id = id
@@ -33,6 +36,10 @@ const userSlice = createSlice({
         state.loginStatus = 'loading'
       }).addCase(logout.fulfilled, (state, action) => {
         state.loginStatus = 'idle'
+      }).addCase(login.rejected, (state, action) => {
+        state.loginStatus = 'idle'
+      }).addCase(logout.pending, (state, action) => {
+        state.loginStatus = 'loading'
       })
   }
 })
