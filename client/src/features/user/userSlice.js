@@ -19,6 +19,18 @@ export const logout = createAsyncThunk('user/logout', async () => {
   return response.data
 })
 
+export const changePassword = createAsyncThunk('user/changePw', async (changeInfo) => {
+  const { userId, password, confirmPassword } = changeInfo
+  if (password === confirmPassword) {
+    const result = await axios.get(`/api/change?id=${userId}&password=${password}`);
+    if (result.data) {
+      alert(result.data);
+    }
+  } else {
+    alert('Passwords do not match')
+  }
+})
+
 const userSlice = createSlice({
   name: 'user',
   initialState,

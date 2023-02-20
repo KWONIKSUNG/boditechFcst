@@ -6,6 +6,7 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const style = {
   position: 'absolute',
@@ -21,7 +22,8 @@ const style = {
   pb: 3,
 };
 
-export default function ChangePw({ userId }) {
+export default function ChangePw() {
+  const userId = useSelector(state => state.user.id)
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
