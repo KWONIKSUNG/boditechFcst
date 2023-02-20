@@ -7,34 +7,26 @@ const router = express.Router();
 dotenv.config();
 
 router.post('/', async (req, res) => {
-    const userId = req.body.data.id;
-    const userPw = req.body.data.password;
-    if (userId === undefined) return res.json('등록되지 않은 유저 입니다.');
-    if (userId === 'admin') {
-        if (userPw === process.env.ADMIN_INFO) {
-            return res.json('is admin');
-        } else {
-            return res.json('invaild id or password')
-        }
+    const userId = req.query.id;
+    const userPw = req.query.password;
 
-    }
     connection.query(`
-        select USERID, USERPW from ${LOGIN_SHEET} where USERID = '${userId}';
+        select USERID, USERPW,agency from ${LOGIN_SHEET} where USERID = '${userId}';
     `, (error, rows, fields) => {
+        const { USERID, USERPW, agency } = rows[0]
         if (error || rows.length === 0) {
-            return res.json('invaild user');
+            throw new Error('error')
         }
-        let id = rows[0].USERID;
-        if (id && userPw === rows[0].USERPW) {
+        if (USERID && userPw === USERPW) {
             req.session.user = {
                 id: userId,
                 pw: userPw,
                 name: userId,
                 authorized: true,
             };
-            res.json('success');
+            res.json({ id: USERID, pw: USERPW, agency: agency })
         } else {
-            res.json('invaild user');
+            throw new Error('error');
         }
 
     })

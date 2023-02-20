@@ -5,32 +5,30 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { TitleLabel } from "../components/Rows";
 import * as xlsx from 'xlsx';
-import axios from "axios";
 import { Button } from "@mui/material";
 import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
 import ChangePw from "../components/ChangePw";
+import { agencySelector, logout, statusSelector } from "../features/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 const Sheet = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [dataArr, setDataArr] = useState([]);
   const ref = useRef();
-  const [agencyName, setAgencyName] = useState('');
+  const id = useSelector(state => state.user.id)
+  const agencyName = useSelector(agencySelector)
+  const status = useSelector(statusSelector)
 
   useEffect(() => {
-    if (location.state === null || location.state === undefined || !location.state) {
-      return navigate('/');
+    if (status === 'success') {
+      handleGetData(setDataArr, id);
+    } else {
+      navigate('/')
     }
-    axios.get(`/api/userId?userId=${location.state}`)
-      .then(async (res) => {
-        setAgencyName(res.data.data);
-        handleGetData(setDataArr, res.data.data);
-      }).catch(err => {
-        console.error(err);
-      })
-
-  }, [])
+  }, [status, id, navigate])
 
   const excelDownload = () => {
     let index = 1;
@@ -89,11 +87,7 @@ const Sheet = () => {
   }
 
   const handleLogout = () => {
-    axios.get(`/api/logout`)
-      .then(res => {
-        navigate('/');
-      })
-      .catch(err => console.error(err))
+    dispatch(logout()).then(() => navigate('/'))
   }
 
   return (
@@ -130,7 +124,7 @@ const Sheet = () => {
             </FileTitle>
           </TitleWrapper>
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
+        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} />
       </TableWrapper>
     </AppWrapper>
   );
