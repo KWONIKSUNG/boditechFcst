@@ -6,7 +6,8 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { changePassword } from '../features/user/userSlice';
 
 const style = {
   position: 'absolute',
@@ -24,6 +25,7 @@ const style = {
 
 export default function ChangePw() {
   const userId = useSelector(state => state.user.id)
+  const dispatch = useDispatch()
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,18 +44,8 @@ export default function ChangePw() {
     setConfirmPassword(e.target.value);
   }
 
-  const handleChangeBtn = async () => {
-    if (password === confirmPassword) {
-      const result = await axios.get(`/api/change?id=${userId}&password=${password}`);
-      if (result.data) {
-        alert(result.data);
-        setOpen(false);
-        setPassword('');
-        setConfirmPassword('');
-      }
-    } else {
-      alert('Passwords do not match')
-    }
+  const onChangePassword = () => {
+    dispatch(changePassword({ userId, password, confirmPassword }))
   }
 
   return (
@@ -70,7 +62,7 @@ export default function ChangePw() {
           <InputWrapper>
             <TextField value={password} style={{ height: '4rem' }} label="Password" type='password' variant="outlined" name="password" onChange={handlePassword} />
             <TextField value={confirmPassword} style={{ height: '4rem' }} type="Password" label="Confirm Password" variant="outlined" name="confirm password" onChange={handleConfirmPassword} />
-            <Button style={{ width: '13rem' }} variant='contained' onClick={handleChangeBtn}>Change</Button>
+            <Button style={{ width: '13rem' }} variant='contained' onClick={onChangePassword}>Change</Button>
           </InputWrapper>
         </Box>
       </Modal>
