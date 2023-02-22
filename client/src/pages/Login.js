@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useDispatch, useSelector } from "react-redux";

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import readXlsxFile from 'read-excel-file';
 import Spreadsheet from "react-spreadsheet";
@@ -13,6 +14,7 @@ import { changeXlsxData, getStandardData, selectSheetData, getCurrentData, postS
 
 
 const Sheet = () => {
+  const columnNames = columnName
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const Sheet = () => {
   const dataArr = useSelector(selectSheetData)
 
   useEffect(() => {
+    columnNames.shift()
     if (status === 'success') {
       dispatch(getStandardData(id));
     } else {
@@ -95,7 +98,7 @@ const Sheet = () => {
             </FileTitle>
           </TitleWrapper>
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={columnName} data={dataArr} />
+        <SpreadsheetWrapper columnLabels={columnNames} data={dataArr} />
       </TableWrapper>
     </AppWrapper>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import styled from "styled-components";
 import Spreadsheet from "react-spreadsheet";
 import React, { useState, useEffect } from 'react';
@@ -20,7 +21,8 @@ import { getAdminData, getCurrentData, selectSheetData } from "./sheetSlice";
 
 
 const Admin = () => {
-  const navigate = useNavigate();
+  const columnNames = columnName
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const agencyName = useSelector(agencySelector);
@@ -33,6 +35,7 @@ const Admin = () => {
   const [value, setValue] = useState('');
 
   useEffect(() => {
+    columnNames.shift()
     if (status === 'success' && !value) {
       dispatch(getAdminData(offset));
     } else if (status === 'success' && value) {
@@ -102,7 +105,7 @@ const Admin = () => {
             </Stack>
           </PagingWrapper>}
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={columnName} data={excel} />
+        <SpreadsheetWrapper columnLabels={columnNames} data={excel} />
       </TableWrapper>
     </AppWrapper>
   );
