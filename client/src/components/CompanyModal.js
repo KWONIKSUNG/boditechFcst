@@ -20,7 +20,7 @@ const style = {
   p: 4,
 };
 
-export default function CompanyModal({ setIsSearching, setDataArr, handleGetData, value, setValue }) {
+export default function CompanyModal({ setIsSearching, value, setValue }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -60,7 +60,7 @@ export default function CompanyModal({ setIsSearching, setDataArr, handleGetData
             }}>Search</Button>
           </ModalTitleWrapper>
           <Input placeholder='Enter the name of the company you want to find.' value={value} onChange={(e) => setValue(e.target.value)} />
-          <ResultTab setDataArr={setDataArr} userData={filteredData} coName={value} setCoName={setValue} handleGetData={handleGetData} handleClose={handleClose} />
+          <ResultTab userData={filteredData} setValue={setValue} handleClose={handleClose} />
         </Box>
       </Modal>
     </div>

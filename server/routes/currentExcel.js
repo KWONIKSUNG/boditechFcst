@@ -5,8 +5,6 @@ const { SHEET_NAME } = require('../common/var');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  let data;
-
   connection.query(`
         select
           Year, Name, Company, Catalog, Cat_no, Unit, January,February,March,Aprill,May,June,July,August,September,October,November,December
@@ -15,7 +13,7 @@ router.get('/', async (req, res) => {
         where 
           Company='${req.query.agency}'
   `, (error, rows, filelds) => {
-    res.json([{ data: rows }]);
+    res.json(rows);
   })
 })
 

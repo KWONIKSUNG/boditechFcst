@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import Spreadsheet from "react-spreadsheet";
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
-import { TitleLabel } from "../components/Rows";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { columnName } from "../../mocks/Rows";
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -11,41 +10,45 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { Button, IconButton } from "@mui/material";
-import CompanyModal from "../components/CompanyModal";
+import CompanyModal from "../../components/CompanyModal";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { handleGetCurrent, handleGetAdmin, handleGetAdminData } from "../utils/SheetUtils";
 import { Stack } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
-import { agencySelector, logout, statusSelector } from "../features/user/userSlice";
+import { agencySelector, logout, statusSelector } from "../user/userSlice";
+import { getAdminData, getCurrentData, selectSheetData } from "./sheetSlice";
 
 
 const Admin = () => {
   const navigate = useNavigate();
-  const [dataArr, setDataArr] = useState([]);
-  const agencyName = useSelector(agencySelector);
-  const [offset, setOffset] = useState(0);
-  const [pagingList, setPagingList] = useState(0);
-  const [isSearching, setIsSearching] = useState(false);
-  const [value, setValue] = useState('');
-  const status = useSelector(statusSelector)
   const dispatch = useDispatch()
 
+  const agencyName = useSelector(agencySelector);
+  const pagingList = useSelector(state => state.sheet.sheetPageNum)
+  const excel = useSelector(selectSheetData)
+  const status = useSelector(statusSelector)
+
+  const [offset, setOffset] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const [value, setValue] = useState('');
+
   useEffect(() => {
-    if (status === 'success') {
-      handleGetAdminData(setDataArr, offset, setPagingList);
-    } else {
+    if (status === 'success' && !value) {
+      dispatch(getAdminData(offset));
+    } else if (status === 'success' && value) {
+      dispatch(getCurrentData(value))
+    }
+    else {
       navigate('/')
     }
-  }, [offset, navigate, status])
+  }, [offset, navigate, status, dispatch, value])
 
   const handleLogout = () => {
     dispatch(logout())
   }
 
-
   const clearInput = () => {
-    setValue(prev => prev = '');
+    setValue('');
   }
   return (
     <AppWrapper>
@@ -62,7 +65,9 @@ const Admin = () => {
       <BtnContainer>
         <BtnWrapper onClick={() => {
           clearInput();
-          handleGetAdmin(setDataArr, offset, setPagingList, setIsSearching);
+          setIsSearching(false)
+          setOffset(0)
+          dispatch(getAdminData(offset));
         }} variant="contained">
           FCST lookup
         </BtnWrapper>
@@ -77,7 +82,7 @@ const Admin = () => {
           </TitleWrapper>
           <FilterWrapper>
             <FileTitle>Filter</FileTitle>
-            <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} handleGetData={handleGetCurrent} setDataArr={setDataArr} />
+            <CompanyModal value={value} setValue={setValue} setIsSearching={setIsSearching} />
           </FilterWrapper>
           {!isSearching && <PagingWrapper>
             <Paging>{offset >= pagingList ? offset - 30 : offset} - {offset + 30 > pagingList ? pagingList : offset + 30} of {pagingList}</Paging>
@@ -97,7 +102,7 @@ const Admin = () => {
             </Stack>
           </PagingWrapper>}
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} onChange={setDataArr} />
+        <SpreadsheetWrapper columnLabels={columnName} data={excel} />
       </TableWrapper>
     </AppWrapper>
   );

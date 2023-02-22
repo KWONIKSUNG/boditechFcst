@@ -1,7 +1,7 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import Sheet from "./pages/Sheet";
+import Sheet from "./features/Sheet/Sheet";
 import Login from "./pages/Login";
-import Admin from "./pages/Admin";
+import Admin from "./features/Sheet/Admin";
 
 const Router = () => {
   return (

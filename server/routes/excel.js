@@ -62,10 +62,10 @@ router.post('/', async (req, res) => {
 
   setTimeout(() => {
     if (isError) {
-      res.send([{ data: 'Error Occurred! Please check the data type ' }]);
+      res.send('Error Occurred! Please check the data type');
       return;
     } else {
-      res.send([{ data: 'upload success' }]);
+      res.send('upload success');
       return;
     }
   }, 500)

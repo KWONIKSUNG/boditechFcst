@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
   connection.query(`
         SELECT FOUND_ROWS();
   `, (error, rows, filelds) => {
-    res.json([{ data: data, pageNum: rows }]);
+    res.json({ data: data, pageNum: rows });
   })
 })
 

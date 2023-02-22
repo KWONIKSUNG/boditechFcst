@@ -1,83 +1,54 @@
 import styled from "styled-components";
 import readXlsxFile from 'read-excel-file';
 import Spreadsheet from "react-spreadsheet";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import { TitleLabel } from "../components/Rows";
-import * as xlsx from 'xlsx';
+import { columnName } from "../../mocks/Rows";
 import { Button } from "@mui/material";
-import { handleSubmit, handleGetData, defaultCellChecker, handleOnClick, handleGetCurrent } from "../utils/SheetUtils";
-import ChangePw from "../components/ChangePw";
-import { agencySelector, logout, statusSelector } from "../features/user/userSlice";
+import ChangePw from "../../components/ChangePw";
+import { excelDownload } from "../../api/sheetControler";
+import { agencySelector, logout, statusSelector } from "../user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { changeXlsxData, getStandardData, selectSheetData, getCurrentData, postSheet } from "./sheetSlice";
 
 
 const Sheet = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [dataArr, setDataArr] = useState([]);
   const ref = useRef();
+
   const id = useSelector(state => state.user.id)
   const agencyName = useSelector(agencySelector)
   const status = useSelector(statusSelector)
+  const dataArr = useSelector(selectSheetData)
 
   useEffect(() => {
     if (status === 'success') {
-      handleGetData(setDataArr, id);
+      dispatch(getStandardData(id));
     } else {
       navigate('/')
     }
-  }, [status, id, navigate])
+  }, [status, id, navigate, dispatch])
 
-  const excelDownload = () => {
-    let index = 1;
-    const submitArr = dataArr.map(innerArr => {
-      const temp = innerArr.map((props) => {
-        if (props.value === null || props.value === undefined) {
-          return null;
-        } else {
-          return props.value;
-        }
-      });
-      temp.unshift(index);
-      index++;
-      return temp;
-    });
-    const downloadTitle = [...TitleLabel];
-    downloadTitle.unshift('');
-    submitArr.unshift(downloadTitle);
-    const book = xlsx.utils.book_new();
-    const dataSheet = xlsx.utils.json_to_sheet(submitArr, { skipHeader: true });
-    xlsx.utils.book_append_sheet(book, dataSheet, "data");
-    xlsx.writeFile(book, `fcst-${agencyName}-data.xlsx`);
-  }
-
-  const fileHandler = (event) => {
-    const fileObj = event.target.files[0];
-    if (fileObj.name.split('.')[1] === 'xls' || fileObj.name.split('.')[1] === 'xlsx') {
-      readXlsxFile(fileObj).then(res => {
-        res.forEach(props => {
-          const dataObj = props.map(prop => {
-            let newDataObj;
-            if (prop === null) {
-              newDataObj = { "value": '0', "readOnly": true };
+  const readFile = (event) => {
+    const file = event.target.files[0];
+    if (file.name.split('.')[1] === 'xls' || file.name.split('.')[1] === 'xlsx') {
+      readXlsxFile(file).then(excel => {
+        const sheetData = excel.map(excelRows => {
+          const convertedSheetData = excelRows.map(rowValue => {
+            let rowData;
+            if (rowValue === null) {
+              rowData = { "value": '0', "readOnly": true };
             } else {
-              newDataObj = { "value": prop, "readOnly": true };
+              rowData = { "value": rowValue, "readOnly": true };
             }
-            return newDataObj;
+            return rowData;
           });
-          dataObj.shift();
-          setDataArr(prev => {
-            return [...prev, dataObj];
-          })
+          convertedSheetData.shift();
+          return convertedSheetData
         })
-        setDataArr(prev => {
-          let newArr = [...prev];
-          newArr.shift();
-          return newArr;
-        })
-        defaultCellChecker(dataArr, setDataArr);
+        dispatch(changeXlsxData(sheetData))
       }).catch(err => console.error(err));
     } else {
       alert('Only Excel files can be uploaded.');
@@ -100,17 +71,17 @@ const Sheet = () => {
         <li>Click the FCST lookup in the upper right to see if it has been applied.</li>
       </ListWrapper>
       <BtnContainer>
-        <BtnWrapper onClick={excelDownload} variant="contained">
+        <BtnWrapper onClick={() => excelDownload(dataArr, agencyName)} variant="contained">
           Download to Excel
         </BtnWrapper>
-        <BtnWrapper variant="contained" onClick={() => handleOnClick(setDataArr, ref)}>
-          <input type='file' ref={ref} style={{ display: "none" }} onChange={fileHandler} />
+        <BtnWrapper variant="contained" onClick={() => ref.current.click()}>
+          <input type='file' ref={ref} style={{ display: "none" }} onChange={readFile} />
           Choose File
         </BtnWrapper>
-        <BtnWrapper variant="contained" onClick={() => handleSubmit(dataArr, location.state)}>
+        <BtnWrapper variant="contained" onClick={() => dispatch(postSheet())}>
           Submit
         </BtnWrapper>
-        <BtnWrapper onClick={() => handleGetCurrent(setDataArr, agencyName)} variant="contained">
+        <BtnWrapper onClick={() => dispatch(getCurrentData(id))} variant="contained">
           FCST lookup
         </BtnWrapper>
       </BtnContainer>
@@ -124,7 +95,7 @@ const Sheet = () => {
             </FileTitle>
           </TitleWrapper>
         </TitleLayout>
-        <SpreadsheetWrapper columnLabels={TitleLabel} data={dataArr} />
+        <SpreadsheetWrapper columnLabels={columnName} data={dataArr} />
       </TableWrapper>
     </AppWrapper>
   );

@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { redirect } from "react-router-dom";
 
 const initialState = {
   id: '',
