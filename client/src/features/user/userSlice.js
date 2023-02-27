@@ -49,6 +49,7 @@ const userSlice = createSlice({
         state.loginStatus = 'idle'
       }).addCase(login.rejected, (state, action) => {
         state.loginStatus = 'idle'
+        alert('Check your id or password')
       }).addCase(logout.pending, (state, action) => {
         state.loginStatus = 'loading'
       })

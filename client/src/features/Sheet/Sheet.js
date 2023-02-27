@@ -26,7 +26,6 @@ const Sheet = () => {
   const dataArr = useSelector(selectSheetData)
 
   useEffect(() => {
-    columnNames.shift()
     if (status === 'success') {
       dispatch(getStandardData(id));
     } else {

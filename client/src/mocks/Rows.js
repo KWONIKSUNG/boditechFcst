@@ -48,7 +48,6 @@ const SheetForm = [
 ];
 
 const columnName = [
-  '',
   'Year',
   'Name',
   'Company',

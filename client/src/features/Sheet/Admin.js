@@ -35,7 +35,6 @@ const Admin = () => {
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    columnNames.shift()
     if (status === 'success' && !value) {
       dispatch(getAdminData(offset));
     } else if (status === 'success' && value) {
