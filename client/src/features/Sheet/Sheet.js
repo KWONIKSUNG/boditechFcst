@@ -84,7 +84,7 @@ const Sheet = () => {
         <BtnWrapper variant="contained" onClick={() => dispatch(postSheet())}>
           Submit
         </BtnWrapper>
-        <BtnWrapper onClick={() => dispatch(getCurrentData(id))} variant="contained">
+        <BtnWrapper onClick={() => dispatch(getCurrentData(agencyName))} variant="contained">
           FCST lookup
         </BtnWrapper>
       </BtnContainer>
